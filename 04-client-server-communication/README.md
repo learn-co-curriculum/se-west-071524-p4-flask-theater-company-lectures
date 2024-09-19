@@ -7,4 +7,4 @@
 * Discuss SocketIO
 * Discuss CORS
 * Discuss honcho
-* Discuss yup
+* Discuss yup, formik

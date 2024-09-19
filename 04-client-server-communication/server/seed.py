@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 from app import app
 from faker import Faker
-from models import CastMember, Production, db
-
-db.init_app(app)
+from models import Actor, CastMember, Production, db
 
 fake = Faker()
 
 with app.app_context():
+    Actor.query.delete()
     Production.query.delete()
     CastMember.query.delete()
+    db.session.commit()
 
     productions = []
 
@@ -64,6 +64,13 @@ with app.app_context():
     db.session.add_all(productions)
     db.session.commit()
 
+    actors = []
+    for _ in range(30):
+        a = Actor(name=fake.name(), email=fake.email())
+        actors.append(a)
+    db.session.add_all(actors)
+    db.session.commit()
+
     hamlet_roles = [
         "Hamlet",
         "Ophelia",
@@ -74,7 +81,7 @@ with app.app_context():
         "Ghost",
     ]
     hamlet_cast_members = [
-        CastMember(name=fake.name(), role=role, production_id=p1.id)
+        CastMember(actor_id=actors.pop().id, role=role, production_id=p1.id)
         for role in hamlet_roles
     ]
     db.session.add_all(hamlet_cast_members)
@@ -82,7 +89,7 @@ with app.app_context():
 
     cats_roles = ["Mr. Mistoffelees", "Bombalurina", "Rumpletezer", "Grizabella"]
     cats_cast_members = [
-        CastMember(name=fake.name(), role=role, production_id=p2.id)
+        CastMember(actor_id=actors.pop().id, role=role, production_id=p2.id)
         for role in cats_roles
     ]
     db.session.add_all(cats_cast_members)
@@ -90,7 +97,7 @@ with app.app_context():
 
     carmen_roles = ["Carmen", "Escamillo", "Jose", "Mercedes", "Dancaire"]
     carmen_cast_members = [
-        CastMember(name=fake.name(), role=role, production_id=p3.id)
+        CastMember(actor_id=actors.pop().id, role=role, production_id=p3.id)
         for role in carmen_roles
     ]
     db.session.add_all(carmen_cast_members)
@@ -105,7 +112,7 @@ with app.app_context():
         "Thomas Jefferson",
     ]
     hamilton_cast_members = [
-        CastMember(name=fake.name(), role=role, production_id=p4.id)
+        CastMember(actor_id=actors.pop().id, role=role, production_id=p4.id)
         for role in hamilton_roles
     ]
     db.session.add_all(hamilton_cast_members)

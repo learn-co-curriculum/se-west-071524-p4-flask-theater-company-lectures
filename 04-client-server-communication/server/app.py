@@ -15,7 +15,7 @@
 # Create Procfile.dev in root
 # in Procfile.dev add:
 # web: PORT=3000 npm start --prefix client
-# api: gunicorn -b 127.0.0.1:5000 --chdir ./server app:app
+# api: gunicorn -b 127.0.0.1:5555 --chdir ./server app:app
 # In Terminal, cd into root and run:
 # `honcho start -f Procfile.dev`
 

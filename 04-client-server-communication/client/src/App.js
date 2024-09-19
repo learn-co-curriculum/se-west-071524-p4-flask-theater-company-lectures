@@ -8,7 +8,9 @@ import Home from './components/Home'
 import ProductionForm from './components/ProductionForm'
 import Navigation from './components/Navigation'
 import ProductionDetail from './components/ProductionDetail'
+import ProductionEdit from './components/ProductionEdit'
 import NotFound from './components/NotFound'
+import { useHistory } from 'react-router-dom'
 
 function App() {
   //Note: This may be a good opportunity to refactor with context
