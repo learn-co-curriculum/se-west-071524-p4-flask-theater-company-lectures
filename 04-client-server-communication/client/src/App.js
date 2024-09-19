@@ -23,6 +23,16 @@ function App() {
     // Note: The proxy in package.json has been set to "http://localhost:5000"
     // This will allow us to proxy our api requests  
   // 5.3 When productions return set the productions to state
+  useEffect(() => {
+    function fetchProductions() {
+      fetch('/productions')
+        .then(r => r.json())
+        .then(setProductions)
+    }
+    fetchProductions()
+  }, [])
+
+
   // 6.✅ navigate to client/src/components/ProductionForm.js
 
   // Bonus: async and await version
