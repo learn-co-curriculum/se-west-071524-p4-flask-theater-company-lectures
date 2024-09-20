@@ -46,7 +46,20 @@ function ProductionForm({addProduction}) {
       description: '',
     },
     validationSchema: formSchema,
-
+    onSubmit: (values) => {
+      fetch('/productions', {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        }, 
+        body: JSON.stringify(values)
+      })
+        .then(res => res.json())
+        .then(production => {
+          addProduction(production)
+          history.push(`/productions/${production.id}`)
+        })
+    }
   })
 
     //10.✅ handle server side errors with res.ok
@@ -55,7 +68,7 @@ function ProductionForm({addProduction}) {
     return (
       <div className='App'>
 
-      <Form >
+      <Form onSubmit={formik.handleSubmit}>
         <label>Title </label>
         <input type='text' name='title' value={formik.values.title} onChange={formik.handleChange} />
         

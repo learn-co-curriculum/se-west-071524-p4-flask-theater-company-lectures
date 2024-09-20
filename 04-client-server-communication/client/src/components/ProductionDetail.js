@@ -17,7 +17,7 @@ function ProductionDetail() {
         res.json().then(data => setError(data.error))
       }
     })
-  },[])
+  },[params])
 
   //12.✅ Create a Delete Button and add a fetch request that will delete a production 
 
