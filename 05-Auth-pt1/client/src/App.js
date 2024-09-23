@@ -14,7 +14,7 @@ import Authentication from './components/Authentication'
 
 function App() {
   const [productions, setProductions] = useState([])
-  const [productionEdit, setProductionEdit] = useState([])
+  const [productionEdit, setProductionEdit] = useState({})
   const [user, setUser] = useState(null)
   const history = useHistory()
 

@@ -96,11 +96,13 @@ class ProductionByID(Resource):
         if not production:
             abort(404, "The Production you were trying to update for was not found")
 
-        for attr in request.form:
-            setattr(production, attr, request.form[attr])
+        for attr in request.get_json():
+            if attr == "budget":
+                production.budget = int(request.get_json()["budget"])
+            else:
+                setattr(production, attr, request.get_json()[attr])
 
-        production.ongoing = bool(request.form["ongoing"])
-        production.budget = int(request.form["budget"])
+        # production.ongoing = bool(request.get_json()["ongoing"])
 
         db.session.add(production)
         db.session.commit()

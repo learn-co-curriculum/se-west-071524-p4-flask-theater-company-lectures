@@ -5,7 +5,9 @@ import { useFormik } from "formik"
 import * as yup from "yup"
 
 
-function ProductionForm({updateProduction, production_edit}) {
+function ProductionEdit({updateProduction, productionEdit}) {
+  console.log("🚀 ~ ProductionEdit ~ productionEdit:", productionEdit)
+  
   const history = useHistory()
     const formSchema = yup.object().shape({
       title: yup.string().required("Must enter a title"),
@@ -13,16 +15,16 @@ function ProductionForm({updateProduction, production_edit}) {
     })
         const formik = useFormik({
           initialValues: {
-            title: production_edit.title,
-            genre: production_edit.genre,
-            budget: production_edit.budget,
-            image: production_edit.image,
-            director:  production_edit.director,
-            description: production_edit.description,
+            title: productionEdit.title,
+            genre: productionEdit.genre,
+            budget: productionEdit.budget,
+            image: productionEdit.image,
+            director:  productionEdit.director,
+            description: productionEdit.description,
           },
           validationSchema: formSchema,
           onSubmit: (values) => {
-            fetch(`/productions/${production_edit.id}`,{
+            fetch(`/productions/${productionEdit.id}`,{
               method:'PATCH',
               headers:{
                 "Content-Type":"application/json"
@@ -65,7 +67,8 @@ function ProductionForm({updateProduction, production_edit}) {
     )
   }
   
-  export default ProductionForm
+  export default ProductionEdit
+
 
   const Form = styled.form`
     display:flex;
