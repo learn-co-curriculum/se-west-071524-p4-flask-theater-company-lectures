@@ -89,6 +89,8 @@ class User(db.Model, SerializerMixin):
         self._password_hash = password_hash.decode("utf8")
 
     # 8.✅ Create an authenticate method that uses bcyrpt to verify the password against the hash in the DB with bcrypt.check_password_hash
+    def authenticate(self, password):
+        return bcrypt.check_password_hash(self.password_hash, password.encode("utf8"))
 
     # 9.✅ Navigate to app
     def __repr__(self):

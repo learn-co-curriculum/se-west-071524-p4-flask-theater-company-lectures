@@ -3,15 +3,17 @@ import {useEffect, useState} from 'react'
 import styled from 'styled-components'
 
 function ProductionDetail() {
-  const [production, setProduction] = useState({crew_members:[], performers_and_roles:[]})
+  const [production, setProduction] = useState({})
   const [error, setError] = useState(null)
   
   const params = useParams()
   const history = useHistory()
   useEffect(()=>{
+    setError(null)
     fetch(`/productions/${params.id}`)
     .then(res => { 
       if(res.ok){
+        console.log("Fetch is ok", res.ok)
         res.json().then(data => setProduction(data))
       } else {
         res.json().then(data => setError(data.error))
@@ -20,7 +22,7 @@ function ProductionDetail() {
   },[])
 
   
-  const {id, title, genre, image,description, crew_members} = production 
+  const {id, title, genre, image,description, cast_members} = production 
   if(error) return <h2>{error}</h2>
   return (
       <CardDetail id={id}>
@@ -33,7 +35,7 @@ function ProductionDetail() {
               <p>{description}</p>
               <h2>Cast Members</h2>
               <ul>
-                {crew_members.map(crew => <li>{`${crew.role} : ${crew.name}`}</li>)}
+                {cast_members?.map(crew => <li>{`${crew.role} : ${crew.name}`}</li>)}
               </ul>
             </div>
             <img src={image}/>

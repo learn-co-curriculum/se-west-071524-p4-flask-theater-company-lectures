@@ -24,6 +24,12 @@ from werkzeug.exceptions import NotFound, Unauthorized
 
 # 2.✅ Navigate to "models.py"
 # Continue on Step 3
+# the followng adds route-specific authorization
+@app.before_request
+def check_if_logged_in():
+    OPEN_ACCESS_LIST = ["/signup", "/login", "/logout", "/authorized"]
+    if request.path not in OPEN_ACCESS_LIST and not session.get("user_id"):
+        raise Unauthorized
 
 
 class Productions(Resource):
@@ -144,12 +150,22 @@ api.add_resource(Users, "/users", "/signup")
 
 # User.query.order_by(User.id.desc()).first()._password_hash
 
+
 # 11.✅ Create a Login route
 # 11.1 use add add_resource to add the login endpoint
 # 11.2 Create a post method
 # 11.2.1 Query the user from the DB with the name provided in the request
 # 11.2.2 Set the user's id to sessions under the user_id key
 # 11.2.3 Create a response to the client with the user's data
+@app.route("/login", methods=["POST"])
+def login():
+    user = User.query.filter(User.name == request.get_json()["name"]).first()
+    if user and user.authenticate(request.get_json()["password"]):
+        session["user_id"] = user.id
+        return make_response(user.to_dict(), 200)
+    else:
+        raise Unauthorized
+
 
 # 12 Head to client/components/authenticate
 
@@ -160,6 +176,12 @@ api.add_resource(Users, "/users", "/signup")
 # 13.2.1 Check to see if the user_id is in session
 # 13.2.2 If found query the user and send it to the client
 # 13.2.3 If not found return a 401 Unauthorized error
+@app.route("/authorized")
+def authorized():
+    user = User.query.filter(User.id == session.get("user_id")).first()
+    if not user:
+        raise Unauthorized
+    return make_response(user.to_dict(), 200)
 
 
 # 14.✅ Create a Logout route
@@ -168,6 +190,13 @@ api.add_resource(Users, "/users", "/signup")
 # 14.2.1 Set the user_id in sessions to None
 # 14.2.1 Create a response with no content and a 204
 # 14.3 Test out your route with the client or Postman
+@app.route("/logout", methods=["DELETE"])
+def logout():
+    # del session["user_id"]
+    # session["user_id"] = None
+    session.clear()
+    return make_response({}, 204)
+
 
 # 14.✅ Navigate to client navigation
 
@@ -175,9 +204,19 @@ api.add_resource(Users, "/users", "/signup")
 @app.errorhandler(NotFound)
 def handle_not_found(e):
     response = make_response(
-        "Not Found: Sorry the resource you are looking for does not exist", 404
+        {"error": "Not Found: Sorry the resource you are looking for does not exist"},
+        404,
     )
 
+    return response
+
+
+@app.errorhandler(Unauthorized)
+def handle_unauthorized(e):
+    response = make_response(
+        {"message": "Unauthorized: invalid credentials. Please try to login again."},
+        401,
+    )
     return response
 
 
